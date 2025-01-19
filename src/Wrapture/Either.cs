@@ -44,6 +44,33 @@ public abstract class Either<L, R>
         );
     }
 
+    public Either<L, R> Tap(Action<L> onLeft, Action<R> onRight)
+    {
+        Match<Unit>(
+            l =>
+            {
+                onLeft(l);
+                return Unit.Value;
+            },
+            r =>
+            {
+                onRight(r);
+                return Unit.Value;
+            }
+        );
+
+        return this;
+    }
+
+    public Result<R> ToResult(Func<L, string> errorConverter)
+    {
+        return Match(
+            onLeft: l => Result.Failure<R>(errorConverter(l)),
+            onRight: r => Result.Success(r)
+        );
+    }
+
+
     public async Task<Either<L, T>> MapAsync<T>(Func<R, Task<T>> mapFunc)
     {
         return await Match(
@@ -59,4 +86,33 @@ public abstract class Either<L, R>
             onRight: bindFunc
         );
     }
+
+    public async Task<T> MatchAsync<T>(Func<L, Task<T>> onLeftAsync, Func<R, Task<T>> onRightAsync)
+    {
+        return await Match(
+            onLeft: l => onLeftAsync(l),
+            onRight: r => onRightAsync(r)
+        );
+    }
+
+    public async Task<Either<L, R>> TapAsync(Func<L, Task> onLeftAsync, Func<R, Task> onRightAsync)
+    {
+        await Match<Task>(
+            onLeft: async l =>
+            {
+                await onLeftAsync(l);
+            },
+            onRight: async r =>
+            {
+                await onRightAsync(r);
+            }
+        );
+
+        return this;
+    }
+}
+
+internal struct Unit
+{
+    internal static readonly Unit Value = new();
 }
