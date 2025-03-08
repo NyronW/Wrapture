@@ -4,7 +4,7 @@ public static class Extensions
 {
     public static PagedResult<T> ToPagedResult<T>(this IEnumerable<T> source, int totalRecords, int currentPage, int pageSize)
     {
-        return new PagedResult<T>(source.Skip((currentPage - 1) * pageSize), totalRecords, currentPage, pageSize);
+        return new PagedResult<T>(source.Skip((currentPage - 1) * pageSize).Take(pageSize), totalRecords, currentPage, pageSize);
     }
 
     public static PagedResult<T> ToPagedResult<T>(this IQueryable<T> query,

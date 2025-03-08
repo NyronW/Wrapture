@@ -99,8 +99,8 @@ namespace Wrapture.Tests.Pagination
         public void ToPagedResult_For_IEnumerable_Should_Create_Correct_PagedResult()
         {
             // Arrange
-            var source = new List<int> { 1, 2, 3, 4, 5, 6,7,8,9,10 };
-            var totalRecords = 10;
+            var source = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            var totalRecords = source.Count;
             var currentPage = 2;
             var pageSize = 5;
 
@@ -109,10 +109,12 @@ namespace Wrapture.Tests.Pagination
 
             // Assert
             pagedResult.Items.Count().Should().Be(5);
-            pagedResult.Pager.TotalRecords.Should().Be(10);
+            pagedResult.Pager.TotalRecords.Should().Be(15);
             pagedResult.Pager.CurrentPage.Should().Be(2);
             pagedResult.Pager.PageSize.Should().Be(5);
-            pagedResult.Pager.TotalPages.Should().Be(2);
+            pagedResult.Pager.TotalPages.Should().Be(3);
+            pagedResult.Pager.StartRecordIndex.Should().Be(6);
+            pagedResult.Pager.EndRecordIndex.Should().Be(10);
         }
 
         [Fact]
@@ -144,8 +146,8 @@ namespace Wrapture.Tests.Pagination
 
             // Act
             var pagedResult = source.ToPagedResult(
-                currentPage, 
-                pageSize, 
+                currentPage,
+                pageSize,
                 q => q.OrderBy(x => x));
 
             // Assert
@@ -179,7 +181,7 @@ namespace Wrapture.Tests.Pagination
             var pagedResult = new PagedResult<int>(new[] { 1, 2, 3 }, 10, 1, 5);
 
             // Act
-            var converted = await pagedResult.ToAsync(async items => 
+            var converted = await pagedResult.ToAsync(async items =>
             {
                 await Task.Delay(1);
                 return items.Select(i => i.ToString());
