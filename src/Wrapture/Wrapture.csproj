@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/NyronW/Wrapture</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>C#; .NET; Functional Programming; Result; Maybe; Either; Specification; Core</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryBranch>main</RepositoryBranch>

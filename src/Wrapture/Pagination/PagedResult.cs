@@ -1,10 +1,22 @@
 ﻿namespace Wrapture.Pagination;
 
 [Serializable]
-public class PagedResult<T>(IEnumerable<T> items, int totalRecords, int currentPage, int pageSize = 10)
+public class PagedResult<T>
 {
-    public IEnumerable<T> Items { get; set; } = items;
-    public Pager Pager { get; set; } = new(totalRecords, currentPage, pageSize);
+    public PagedResult()
+    {
+        Items = [];
+        Pager = new(0, 1, 10);
+    }
+
+    public PagedResult(IEnumerable<T> items, int totalRecords, int currentPage, int pageSize = 10)
+    {
+        Items = items;
+        Pager = new(totalRecords, currentPage, pageSize);
+    }
+
+    public IEnumerable<T> Items { get; set; }
+    public Pager Pager { get; set; }
 
     public PagedResult<TTarget> To<TTarget>(Func<IEnumerable<T>, IEnumerable<TTarget>> converter)
     {
@@ -18,7 +30,6 @@ public class PagedResult<T>(IEnumerable<T> items, int totalRecords, int currentP
         var convertedItems = await converter(Items);
         return new PagedResult<TTarget>(convertedItems, Pager.TotalRecords, Pager.CurrentPage, Pager.PageSize);
     }
-
 }
 
 public class Pager
