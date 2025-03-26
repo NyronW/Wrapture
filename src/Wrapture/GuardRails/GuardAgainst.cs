@@ -34,7 +34,6 @@ public class GuardAgainst : GuardAgainstBase
     {
     }
 
-
     public Result ToResult()
     {
         if (HasErrors)
